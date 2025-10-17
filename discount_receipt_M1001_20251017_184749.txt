@@ -1,0 +1,8 @@
+Date: 2025-10-17
+Member: Tanmoy Bhowmick (ID: M1001)
+
+A discount of 50.00% has been applied to your monthly fee.
+Previous base fee: 25.00
+New monthly fee after discount: 20.00
+
+Thank you.

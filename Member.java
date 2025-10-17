@@ -1,4 +1,7 @@
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class Member {
     protected String id;
@@ -7,6 +10,7 @@ public abstract class Member {
     protected double baseFee; // monthly base fee
     protected double performanceRating; // 0.0 - 100.0 (percentage)
     protected String membershipType; // "Regular" or "Trainer"
+    private final List<Double> monthlyPerformance = new ArrayList<>();
 
     public Member(String id, String firstName, String lastName, double baseFee, double performanceRating, String membershipType) {
         this.id = id;
@@ -16,6 +20,21 @@ public abstract class Member {
         this.performanceRating = performanceRating;
         this.membershipType = membershipType;
     }
+
+    public void addMonthlyPerformance(double rating) {
+        monthlyPerformance.add(rating);
+        // keep last 12 months only
+        if (monthlyPerformance.size() > 12) {
+            monthlyPerformance.remove(0);
+        }
+    }
+       public List<Double> getMonthlyPerformanceHistory() {
+        return Collections.unmodifiableList(monthlyPerformance);
+    }
+
+  
+
+
 
     // Each subclass defines how final fee is computed (polymorphism)
     public abstract double calculateFee();

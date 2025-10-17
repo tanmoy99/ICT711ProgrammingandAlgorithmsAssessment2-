@@ -1,12 +1,10 @@
 id,firstName,lastName,type,baseFee,performanceRating,extra1,extra2
-M1001,Tanmoy,Bhowmick,Regular,50.0,78.0,,
+M1001,Tanmoy,Bhowmick,Regular,25.0,78.0,,
 M1002,GroupMember1,Lastname,Regular,45.0,62.0,,
-M1003,GroupMember2,Lastname,Regular,55.0,45.0,,
 M1004,GroupMember3,Lastname,Trainer,60.0,82.0,AliceTrainer,30.0
 M1005,GroupMember4,Lastname,Trainer,65.0,70.0,BobTrainer,25.0
 M1006,MemberA,Smith,Regular,40.0,59.0,,
 M1007,MemberB,Jones,Regular,35.0,88.0,,
 M1008,MemberC,Brown,Trainer,70.0,90.0,Cara,40.0
-M1009,MemberD,Davis,Regular,30.0,50.0,,
-M1010,MemberE,Wilson,Regular,48.0,67.0,,
 M1011,Marjana,Swarnaly,Regular,20.0,50.0,,
+M1012,xyz,bbh,Regular,60.0,90.0,,

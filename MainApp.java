@@ -1,6 +1,13 @@
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 public class MainApp {
     private static final String DATA_FILE = "member_data.csv";
@@ -205,6 +212,21 @@ public class MainApp {
                 else {
                     System.out.println(m);
                     System.out.printf("Calculated monthly fee: %.2f%n", m.calculateFee());
+                    // show monthly performance history
+                    List<Double> history = m.getMonthlyPerformanceHistory();
+                    if (history == null || history.isEmpty()) {
+                        System.out.println("No monthly performance history available.");
+                    } else {
+                        System.out.println("Monthly performance history (oldest -> most recent):");
+                        for (int i = 0; i < history.size(); i++) {
+                            System.out.printf("  Month %d: %.1f%%%n", i + 1, history.get(i));
+                        }
+                        // also show simple summary
+                        double avg = history.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+                        double best = history.stream().mapToDouble(Double::doubleValue).max().orElse(0.0);
+                        double worst = history.stream().mapToDouble(Double::doubleValue).min().orElse(0.0);
+                        System.out.printf("  Avg: %.1f%%  Best: %.1f%%  Worst: %.1f%%%n", avg, best, worst);
+                    }
                 }
                 break;
             case "c":
@@ -226,14 +248,28 @@ public class MainApp {
                 String act = scanner.nextLine().trim();
                 System.out.print("Enter member ID: ");
                 String id2 = scanner.nextLine().trim();
-                if ("1".equals(act)) System.out.println(manager.issueReminder(id2));
-                else if ("2".equals(act)) System.out.println(manager.issueAppreciation(id2));
-                else if ("3".equals(act)) {
+                if ("1".equals(act)) {
+                    String text = manager.issueReminder(id2);
+                    System.out.println(text);
+                    String fileName = writeLetterFile("reminder", id2, buildReminderLetter(id2, text));
+                    if (fileName != null) System.out.println("Reminder letter saved to: " + fileName);
+                } else if ("2".equals(act)) {
+                    String text = manager.issueAppreciation(id2);
+                    System.out.println(text);
+                    String fileName = writeLetterFile("appreciation", id2, buildAppreciationLetter(id2, text));
+                    if (fileName != null) System.out.println("Appreciation letter saved to: " + fileName);
+                } else if ("3".equals(act)) {
                     System.out.print("Enter discount percent (e.g., 0.10 for 10%): ");
                     double p = readDoubleWithDefault(0.10);
                     boolean ok = manager.awardDiscount(id2, p);
                     System.out.println(ok ? "Discount applied." : "Member not found.");
-                    try { manager.saveToFile(DATA_FILE); } catch (IOException e) { System.out.println("Failed to save after discount."); }
+                    if (ok) {
+                        // save a receipt file
+                        String receipt = buildDiscountReceipt(id2, p);
+                        String fileName = writeLetterFile("discount_receipt", id2, receipt);
+                        if (fileName != null) System.out.println("Discount receipt saved to: " + fileName);
+                        try { manager.saveToFile(DATA_FILE); } catch (IOException e) { System.out.println("Failed to save after discount."); }
+                    }
                 } else System.out.println("Unknown action.");
                 break;
             default:
@@ -257,6 +293,61 @@ public class MainApp {
             System.out.println("Invalid number, using default " + def);
             return def;
         }
+    }
+
+    // Helper: create and write letter/receipt files
+    private String writeLetterFile(String prefix, String memberId, String content) {
+        try {
+            String ts = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now());
+            String safeId = memberId.replaceAll("[^a-zA-Z0-9_-]", "_");
+            String fname = prefix + "_" + safeId + "_" + ts + ".txt";
+            Path p = Paths.get(fname);
+            Files.write(p, content.getBytes(StandardCharsets.UTF_8));
+            return p.toAbsolutePath().toString();
+        } catch (IOException ex) {
+            System.out.println("Failed to write file: " + ex.getMessage());
+            return null;
+        }
+    }
+
+    private String buildReminderLetter(String memberId, String summaryText) {
+        Member m = manager.findById(memberId);
+        String name = (m != null) ? (m.getFirstName() + " " + m.getLastName()) : memberId;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Date: ").append(LocalDateTime.now().toLocalDate()).append(System.lineSeparator());
+        sb.append("To: ").append(name).append(System.lineSeparator()).append(System.lineSeparator());
+        sb.append("Subject: Activity Reminder").append(System.lineSeparator()).append(System.lineSeparator());
+        sb.append(summaryText).append(System.lineSeparator()).append(System.lineSeparator());
+        sb.append("Please contact the front desk if you need assistance with your program.").append(System.lineSeparator());
+        return sb.toString();
+    }
+
+    private String buildAppreciationLetter(String memberId, String summaryText) {
+        Member m = manager.findById(memberId);
+        String name = (m != null) ? (m.getFirstName() + " " + m.getLastName()) : memberId;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Date: ").append(LocalDateTime.now().toLocalDate()).append(System.lineSeparator());
+        sb.append("To: ").append(name).append(System.lineSeparator()).append(System.lineSeparator());
+        sb.append("Subject: Appreciation").append(System.lineSeparator()).append(System.lineSeparator());
+        sb.append(summaryText).append(System.lineSeparator()).append(System.lineSeparator());
+        sb.append("Congratulations and keep up the great work!").append(System.lineSeparator());
+        return sb.toString();
+    }
+
+    private String buildDiscountReceipt(String memberId, double percent) {
+        Member m = manager.findById(memberId);
+        String name = (m != null) ? (m.getFirstName() + " " + m.getLastName()) : memberId;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Date: ").append(LocalDateTime.now().toLocalDate()).append(System.lineSeparator());
+        sb.append("Member: ").append(name).append(" (ID: ").append(memberId).append(")").append(System.lineSeparator()).append(System.lineSeparator());
+        sb.append(String.format("A discount of %.2f%% has been applied to your monthly fee.%n", percent * 100.0));
+        if (m != null) {
+            sb.append(String.format("Previous base fee: %.2f%n", m.getBaseFee()));
+            double newFee = m.calculateFee();
+            sb.append(String.format("New monthly fee after discount: %.2f%n", newFee));
+        }
+        sb.append(System.lineSeparator()).append("Thank you.").append(System.lineSeparator());
+        return sb.toString();
     }
 
     public static void main(String[] args) {
