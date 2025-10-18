@@ -4,13 +4,13 @@ import java.util.stream.Collectors;
 
 public class MemberManager {
     private List<Member> members;
-    private int idCounter = 1000; // simple id generator base
+    private int idCounter = 100; // simple id generator base
 
     public MemberManager() {
         this.members = new ArrayList<>();
     }
 
-    // Generate unique ID (simple incremental)
+    // Generate unique ID with each increment
     public String generateId() {
         idCounter += 1;
         return "M" + idCounter;
@@ -53,7 +53,7 @@ public class MemberManager {
         }
     }
 
-    // Issue reminder letter (simulate text output)
+    // Issue reminder letter by text output
     public String issueReminder(String id) {
         Member m = findById(id);
         if (m == null) return "Member not found.";
@@ -61,7 +61,7 @@ public class MemberManager {
                 m.getFirstName(), m.getLastName(), m.getId(), m.calculateFee());
     }
 
-    // Issue appreciation letter
+    //  appreciation letter
     public String issueAppreciation(String id) {
         Member m = findById(id);
         if (m == null) return "Member not found.";
@@ -69,7 +69,7 @@ public class MemberManager {
                 m.getFirstName(), m.getLastName(), m.getId(), m.getPerformanceRating());
     }
 
-    // Award extra discount by directly reducing baseFee (administrative action)
+    // Award extra discount by directly reducing baseFee 
     public boolean awardDiscount(String id, double percent) {
         Member m = findById(id);
         if (m == null) return false;
@@ -89,7 +89,7 @@ public class MemberManager {
         }
     }
 
-    // Load members from CSV. If file not found, throw IOException to caller.
+    // Load members from CSV. If file not found throw IOException to caller.
     public void loadFromFile(String filepath) throws IOException {
         File f = new File(filepath);
         if (!f.exists()) {
@@ -101,8 +101,7 @@ public class MemberManager {
             String line = br.readLine(); // header
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",", -1); // allow empty
-                // expected: id,first,last,type,baseFee,perf,extra1,extra2
-                if (parts.length < 6) continue; // skip malformed
+                if (parts.length < 6) continue; 
                 String id = parts[0].trim();
                 String first = parts[1].trim();
                 String last = parts[2].trim();
@@ -139,9 +138,8 @@ public class MemberManager {
         this.members = loaded;
     }
 
-    // Create sample file with 10 records (useful if initial file missing)
+    // Create a sample csv file if there is no exsisting file 
     public void createSampleFile(String filepath) throws IOException {
-        // create 10 sample members. Replace group placeholders with actual names if you have them.
         members.clear();
         members.add(new RegularMember(generateId(), "Tanmoy", "Bhowmick", 50.0, 78.0)); // example: your name
         members.add(new RegularMember(generateId(), "GroupMember1", "Lastname", 45.0, 62.0));

@@ -21,7 +21,7 @@ public class MainApp {
 
     public void start() {
         System.out.println("===== Member Management System =====");
-        // try to load file; if not exist, ask to create sample
+        // try to load the csv file if the file is not created creat a sample file 
         try {
             manager.loadFromFile(DATA_FILE);
             System.out.println("Loaded members from " + DATA_FILE);
@@ -73,7 +73,7 @@ public class MainApp {
         System.out.println("\nMenu:");
         System.out.println("1. Load records from file");
         System.out.println("2. Add new member and save to file");
-        System.out.println("3. Update member information and save to file");
+        System.out.println("3. Update member information and save to file and update member discount and review");
         System.out.println("4. Delete member and save to file");
         System.out.println("5. View / Query member details");
         System.out.println("6. Save current members to file");
@@ -119,7 +119,7 @@ public class MainApp {
             manager.addMember(rm);
             System.out.println("Added: " + rm);
         }
-        // auto-save after add
+        // save the details in the csv file
         try {
             manager.saveToFile(DATA_FILE);
             System.out.println("Saved changes to " + DATA_FILE);
@@ -156,7 +156,7 @@ public class MainApp {
             try { np = Double.parseDouble(pr); } catch (NumberFormatException ex) { System.out.println("Invalid number — skipping perf rating."); }
         }
         manager.updateMemberDetails(id, nf, nl, nb, np);
-        // special handling if TrainerMember and want to change trainer details
+        // special  case handling if Trainer Member want to change trainer details
         if (m instanceof TrainerMember) {
             TrainerMember tm = (TrainerMember) manager.findById(id); // re-get
             System.out.print("Change trainer name? (enter to skip): ");
@@ -195,6 +195,7 @@ public class MainApp {
         }
     }
 
+    //view all the mmebers save in the csv file also can set the cutomer discount and sent reminder or appreciation
     private void handleViewQuery() {
         System.out.println("Query options: a) All  b) By ID  c) By name  d) By performance threshold  e) Issue reminder/appreciation/discount");
         System.out.print("Choose: ");
@@ -277,6 +278,7 @@ public class MainApp {
         }
     }
 
+    //save the details in file
     private void handleSave() {
         try {
             manager.saveToFile(DATA_FILE);
@@ -295,7 +297,7 @@ public class MainApp {
         }
     }
 
-    // Helper: create and write letter/receipt files
+    // Helper to create and write cutomer discount and sent reminder or appreciation
     private String writeLetterFile(String prefix, String memberId, String content) {
         try {
             String ts = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss").format(LocalDateTime.now());
@@ -350,6 +352,7 @@ public class MainApp {
         return sb.toString();
     }
 
+    //fucntion to statrt the app
     public static void main(String[] args) {
         MainApp app = new MainApp();
         app.start();

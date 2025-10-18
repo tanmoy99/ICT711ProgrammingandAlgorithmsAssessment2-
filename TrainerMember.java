@@ -13,9 +13,7 @@ public class TrainerMember extends Member {
     public void setTrainerName(String trainerName) { this.trainerName = trainerName; }
     public void setTrainerFee(double trainerFee) { this.trainerFee = trainerFee; }
 
-    /**
-     * For trainer members: trainerFee added to base. Also apply smaller performance discounts.
-     */
+    //For trainer members trainerFee added to base. Also apply smaller performance discounts.
     @Override
     public double calculateFee() {
         double discount = 0.0;
@@ -27,7 +25,6 @@ public class TrainerMember extends Member {
 
     @Override
     public String toCSV() {
-        // include trainerName and trainerFee in extra fields
         return String.join(",",
                 escape(id),
                 escape(firstName),

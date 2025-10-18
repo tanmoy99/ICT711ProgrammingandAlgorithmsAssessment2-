@@ -1,6 +1,6 @@
 public class PerformanceRecord {
     private String memberId;
-    private String month; // e.g., "2025-03"
+    private String month; 
     private boolean achieved;
     private String notes;
 

@@ -7,9 +7,9 @@ public abstract class Member {
     protected String id;
     protected String firstName;
     protected String lastName;
-    protected double baseFee; // monthly base fee
-    protected double performanceRating; // 0.0 - 100.0 (percentage)
-    protected String membershipType; // "Regular" or "Trainer"
+    protected double baseFee; 
+    protected double performanceRating; 
+    protected String membershipType; 
     private final List<Double> monthlyPerformance = new ArrayList<>();
 
     public Member(String id, String firstName, String lastName, double baseFee, double performanceRating, String membershipType) {
@@ -23,7 +23,7 @@ public abstract class Member {
 
     public void addMonthlyPerformance(double rating) {
         monthlyPerformance.add(rating);
-        // keep last 12 months only
+        // keep the last 12 months  performance only
         if (monthlyPerformance.size() > 12) {
             monthlyPerformance.remove(0);
         }
@@ -36,12 +36,11 @@ public abstract class Member {
 
 
 
-    // Each subclass defines how final fee is computed (polymorphism)
+    //use polymorphism to computed final fee
     public abstract double calculateFee();
 
-    // For saving to CSV (overridden in subclass if needed to include extra fields)
+    // For saving to CSV also overridden in subclass if needed to include extra fields
     public String toCSV() {
-        // basic fields: id,firstName,lastName,type,baseFee,performanceRating,extra1,extra2
         return String.join(",",
                 escape(id),
                 escape(firstName),
@@ -49,7 +48,7 @@ public abstract class Member {
                 escape(membershipType),
                 String.valueOf(baseFee),
                 String.valueOf(performanceRating),
-                "", ""); // placeholders for subclass extras
+                "", ""); // placeholders for extra subclass 
     }
 
     private String escape(String s) {

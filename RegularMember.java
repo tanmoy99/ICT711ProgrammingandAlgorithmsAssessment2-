@@ -4,11 +4,11 @@ public class RegularMember extends Member {
         super(id, firstName, lastName, baseFee, performanceRating, "Regular");
     }
 
-    /**
-     * Regular member: if performanceRating >= 75 -> 20% discount
-     * if performanceRating >= 60 -> 10% discount
-     * else no discount.
-     */
+    
+     //Regular member: if performanceRating >= 75 -> 20% discount
+     //if performanceRating >= 60 -> 10% discount
+     //else no discount.
+
     @Override
     public double calculateFee() {
         double discount = 0.0;
@@ -19,7 +19,6 @@ public class RegularMember extends Member {
 
     @Override
     public String toCSV() {
-        // no extra fields -> keep placeholders
         return super.toCSV();
     }
 }
