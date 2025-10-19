@@ -141,11 +141,11 @@ public class MemberManager {
     // Create a sample csv file if there is no exsisting file 
     public void createSampleFile(String filepath) throws IOException {
         members.clear();
-        members.add(new RegularMember(generateId(), "Tanmoy", "Bhowmick", 50.0, 78.0)); // example: your name
-        members.add(new RegularMember(generateId(), "GroupMember1", "Lastname", 45.0, 62.0));
-        members.add(new RegularMember(generateId(), "GroupMember2", "Lastname", 55.0, 45.0));
-        members.add(new TrainerMember(generateId(), "GroupMember3", "Lastname", 60.0, 82.0, "AliceTrainer", 30.0));
-        members.add(new TrainerMember(generateId(), "GroupMember4", "Lastname", 65.0, 70.0, "BobTrainer", 25.0));
+        members.add(new RegularMember(generateId(), "Tanmoy", "Bhowmick", 50.0, 78.0));
+        members.add(new RegularMember(generateId(), "Rakesh", "Vellanki", 45.0, 80.0));
+        members.add(new RegularMember(generateId(), "Abashyak", "Bista", 55.0, 82.0));
+        members.add(new TrainerMember(generateId(), "Marjana ", "Swarnaly", 60.0, 82.0, "AliceTrainer", 30.0));
+        members.add(new TrainerMember(generateId(), "XYZ", "zzz", 65.0, 70.0, "BobTrainer", 25.0));
         members.add(new RegularMember(generateId(), "MemberA", "Smith", 40.0, 59.0));
         members.add(new RegularMember(generateId(), "MemberB", "Jones", 35.0, 88.0));
         members.add(new TrainerMember(generateId(), "MemberC", "Brown", 70.0, 90.0, "Cara", 40.0));

@@ -73,9 +73,9 @@ public class MainApp {
         System.out.println("\nMenu:");
         System.out.println("1. Load records from file");
         System.out.println("2. Add new member and save to file");
-        System.out.println("3. Update member information and save to file and update member discount and review");
+        System.out.println("3. Update member information and save to file");
         System.out.println("4. Delete member and save to file");
-        System.out.println("5. View / Query member details");
+        System.out.println("5. View / Query member details and update member discount and review");
         System.out.println("6. Save current members to file");
         System.out.println("7. Exit");
         System.out.print("Please choose an option: ");
